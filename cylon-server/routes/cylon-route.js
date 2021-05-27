@@ -1,48 +1,22 @@
-const express = require("express");
-const Cylon = require("cylon");
+const express = require('express');
+const Cylon = require('cylon');
 const router = express.Router();
+const LEDRobot = require('../robots/led-robot');
 
-router.get("/startLED", function (req, res, next) {
-  // Initialize the robot
-  console.log('START LED')
-  Cylon.robot({
-    // Change the port to the correct port for your Arduino.
-    connections: {
-      arduino: { adaptor: "firmata", port: "/dev/ttyACM0" },
-    },
-
-    devices: {
-      led: { driver: "led", pin: 13 },
-    },
-
-    work: function (my) {
-      every((1).second(), function () {
-        my.led.toggle();
-      });
-    },
-  }).start();
-  res.send("LED Started");
+router.get('/setLedRobotConfiguration', (req, res) => {
+  // Initialize the LED Robot
+  LEDRobot.setLedRobotConfiguration();
+  res.send('LED Configuration Successful!');
 });
-router.get("/stopLED", function (req, res, next) {
-    // Initialize the robot
-    console.log('STOP LED')
-    Cylon.robot({
-      // Change the port to the correct port for your Arduino.
-      connections: {
-        arduino: { adaptor: "firmata", port: "/dev/ttyACM0" },
-      },
-  
-      devices: {
-        led: { driver: "led", pin: 13 },
-      },
-  
-      work: function (my) {
-        every((1).second(), function () {
-          my.led.toggle();
-        });
-      },
-    }).start();
-    res.send("LED Stopped");
-  });
+router.get('/startLED', function (req, res, next) {
+  // Start the LED
+  LEDRobot.startLED();
+  res.send('LED Started');
+});
+router.get('/stopLED', function (req, res, next) {
+  // Start the LED
+  LEDRobot.stopLED();
+  res.send('LED Stopped');
+});
 
 module.exports = router;
