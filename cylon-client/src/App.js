@@ -5,7 +5,22 @@ import './App.css';
 function App() {
   const [apiResponse, setApiResponse] = useState('');
   const setLEDConfiguration = () => {
-    fetch('http://localhost:9000/cylonRoute/setLedRobotConfiguration')
+    fetch('http://localhost:9000/cylonRoute/setLedRobotConfiguration', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        // Change the port to the correct port for your Arduino.
+        connections: {
+          arduino: { adaptor: 'firmata', port: '/dev/ttyACM0' },
+        },
+        devices: {
+          led: { driver: 'led', pin: 13 },
+        },
+      })
+    })
       .then((res) => res.text())
       .then((res) => setApiResponse(res));
   };

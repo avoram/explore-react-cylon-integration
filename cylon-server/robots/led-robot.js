@@ -1,20 +1,12 @@
 const cylon = require('cylon');
-
 class LEDRobot {
   constructor() {
     this.robot = null;
   }
-  setLedRobotConfiguration() {
+  setLedRobotConfiguration(configuration) {
+    const robotConfiguration = configuration;
     this.robot = cylon
-      .robot({
-        // Change the port to the correct port for your Arduino.
-        connections: {
-          arduino: { adaptor: 'firmata', port: '/dev/ttyACM0' },
-        },
-        devices: {
-          led: { driver: 'led', pin: 13 },
-        },
-      })
+      .robot(robotConfiguration)
       .start();
   }
   startLED() {
