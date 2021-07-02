@@ -3,7 +3,7 @@ const Cylon = require('cylon');
 const router = express.Router();
 const LEDRobot = require('../robots/led-robot');
 
-router.post('/setLedRobotConfiguration', (req, res) => {
+router.post('/setRobotConfiguration', (req, res) => {
   // Initialize the LED Robot
   console.log('req is :: ', req.body);
   console.log('Type', typeof req.body);

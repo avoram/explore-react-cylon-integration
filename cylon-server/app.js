@@ -6,6 +6,7 @@ var logger = require('morgan');
 const cors = require("cors");
 
 const cylonRouter = require('./routes/cylon-route');
+const utilRouter = require('./routes/util-route');
 
 var app = express();
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use("/cylonRoute", cylonRouter);
+app.use("/utils", utilRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
