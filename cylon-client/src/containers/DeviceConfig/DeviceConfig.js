@@ -4,7 +4,7 @@ import { Form, Button, Row, Col, Container } from 'react-bootstrap';
 import './DeviceConfig.css';
 import { API_ENDPOINTS } from '../../constants/constants-app';
 
-function DeviceConfig() {
+function DeviceConfig(props) {
     const [deviceList, setDeviceList] = useState([]);
     React.useEffect(() => {
         async function getPlatforms() {
@@ -19,7 +19,7 @@ function DeviceConfig() {
         <div className='device-config'>
             <Container>
                 <Row>
-                    <Col xs={10}>
+                    <Col xs={6}>
                         <Form.Control as="select" aria-label="Select Device">
                             {deviceList.map(item => (
                                 <option key={item.id} value={item.id} >
@@ -27,6 +27,9 @@ function DeviceConfig() {
                                 </option>
                             ))}
                         </Form.Control>
+                    </Col>
+                    <Col xs={3}>
+                        <Form.Control type="text" placeholder="Pin"></Form.Control>
                     </Col>
                     <Col xs={2}>
                         <Button variant="primary">Test</Button>{' '}

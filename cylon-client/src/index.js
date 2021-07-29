@@ -4,10 +4,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { BrowserRouter } from 'react-router-dom';
+import { DevicesContextProvider } from './store/devices-context';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <DevicesContextProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </DevicesContextProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

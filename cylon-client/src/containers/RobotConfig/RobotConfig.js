@@ -6,6 +6,7 @@ import { API_ENDPOINTS } from '../../constants/constants-app';
 import { get, post } from '../../services/utils';
 
 function RobotConfig(props) {
+    let { id } = props; 
     const [platformList, setPlatformList] = useState([]);
     const [selectedPlatform, setSelectedPlatform] = useState({});
     React.useEffect(() => {
@@ -22,10 +23,9 @@ function RobotConfig(props) {
         console.log(event);
         setSelectedPlatform(platformList.find(ele => ele.id === event.target.value));
     }
-    const addDevice = (event) => {
-        console.log(props);
-        setPlatformConfiguration(selectedPlatform);
-        props.onRobotSelected(selectedPlatform);
+    const addDevice = (id) => {
+        // setPlatformConfiguration(selectedPlatform);
+        props.onRobotSelected(selectedPlatform,id);
     }
     const setPlatformConfiguration = (data) => {
         post(API_ENDPOINTS.ROOTURL + 'cylonRoute/setRobotConfiguration', data)
@@ -66,7 +66,7 @@ function RobotConfig(props) {
                         </Form.Group>
                     </Col>
                     <Col xs={2} className="buttons-section">
-                        <Button onClick={addDevice} variant="primary">Add Device</Button>{' '}
+                        <Button onClick={() => addDevice(id)} variant="primary">Add Device</Button>{' '}
                     </Col>
                 </Row>
             </Container>
