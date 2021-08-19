@@ -1,9 +1,9 @@
 import React from 'react';
 import Dashboard from '../containers/Dashboard/Dashboard';
 
-const Devices = () => {
-    return(
-        <Dashboard/>
+const Devices = (props) => {
+    return (
+        <Dashboard setRobotSelected={props.onRobotSelected} />
     )
 }
 

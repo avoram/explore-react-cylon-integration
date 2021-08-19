@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { Form, Button, Row, Col, Container } from 'react-bootstrap';
 import './RobotConfig.css';
 import { API_ENDPOINTS } from '../../constants/constants-app';
-import { get, post } from '../../services/utils';
+import { get } from '../../services/utils';
 
 function RobotConfig(props) {
-    let { id } = props; 
-    const [platformList, setPlatformList] = useState([]);
-    const [selectedPlatform, setSelectedPlatform] = useState({});
+    let { id } = props;
+    let [platformList, setPlatformList] = useState([]);
+    let [selectedPlatform, setSelectedPlatform] = useState([]);
     React.useEffect(() => {
         async function getPlatforms() {
             setPlatformList([]);
@@ -20,32 +20,22 @@ function RobotConfig(props) {
         getPlatforms();
     }, []);
     const changedPlatform = (event) => {
-        console.log(event);
         setSelectedPlatform(platformList.find(ele => ele.id === event.target.value));
     }
     const addDevice = (id) => {
-        // setPlatformConfiguration(selectedPlatform);
-        props.onRobotSelected(selectedPlatform,id);
-    }
-    const setPlatformConfiguration = (data) => {
-        post(API_ENDPOINTS.ROOTURL + 'cylonRoute/setRobotConfiguration', data)
-            .then((res) => res.text())
-            .then((res) => console.log(res));
+        props.onRobotSelected(selectedPlatform, id);
     }
     const onPortChange = (event) => {
-        console.log(props);
-        const i = platformList.findIndex(ele => ele.id === selectedPlatform.value)
-        selectedPlatform.port = event;
-        platformList[i] = selectedPlatform;
-        setPlatformList(platformList);
-
+        selectedPlatform = { ...selectedPlatform, port: event };
+        setSelectedPlatform(selectedPlatform);
+        return true;
     }
 
     return (
         <div className='robot-config'>
             <Container>
                 <Row>
-                    <Col xs={10} className="controls-section">
+                    <Col xs={9} className="controls-section">
                         <Form.Group >
                             <Form.Label>Platform</Form.Label>
                             <Form.Control onChange={changedPlatform} as="select" aria-label="Select Platform">
@@ -58,15 +48,15 @@ function RobotConfig(props) {
                         </Form.Group>
                         <Form.Group >
                             <Form.Label>Adaptor</Form.Label>
-                            <Form.Control type="text" value={selectedPlatform.adaptor} readOnly />
+                            <Form.Control type="text" value={selectedPlatform.adaptor || ''} readOnly />
                         </Form.Group>
                         <Form.Group >
                             <Form.Label>Port</Form.Label>
-                            <Form.Control type="text" value={selectedPlatform.port} onChange={e => onPortChange(e.target.value)} />
+                            <Form.Control type="text" value={selectedPlatform.port || ''} onChange={e => onPortChange(e.target.value)} />
                         </Form.Group>
                     </Col>
-                    <Col xs={2} className="buttons-section">
-                        <Button onClick={() => addDevice(id)} variant="primary">Add Device</Button>{' '}
+                    <Col xs={3} className="buttons-section">
+                        <Button onClick={() => addDevice(id)} variant="primary">Configure Devices</Button>{' '}
                     </Col>
                 </Row>
             </Container>

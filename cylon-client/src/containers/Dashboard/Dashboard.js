@@ -1,36 +1,18 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { API_ENDPOINTS } from '../../constants/constants-app';
-import DeviceConfig from '../DeviceConfig/DeviceConfig';
-import RobotConfig from '../RobotConfig/RobotConfig';
-import './Dashboard.css';
 import { useHistory } from 'react-router-dom';
 import DevicesContext from '../../store/devices-context';
+import RobotConfig from '../RobotConfig/RobotConfig';
+import './Dashboard.css';
 
-function Dashboard() {
-    const [apiResponse, setApiResponse] = useState('');
-    const [robotSelected, setRobotSelected] = useState('');
+function Dashboard(props) {
     const [devices, setDevices] = useState([]);
     const history = useHistory();
     const deviceCtx = useContext(DevicesContext);
-    console.log(deviceCtx);
-    const onRobotSelected = (event,id) => {
-        console.log(history);
-        // event.preventDefault();
-        setRobotSelected(event);
-        history.push('/configureDevice/' + id );
+    const onRobotSelected = (event, id) => {
+        props.setRobotSelected(event);
+        history.push('/configureDevice/' + id);
     }
-    const startLED = () => {
-        fetch(API_ENDPOINTS.ROOTURL + 'cylonRoute/startLED')
-            .then((res) => res.text())
-            .then((res) => setApiResponse(res));
-    };
-    const stopLED = () => {
-        fetch(API_ENDPOINTS.ROOTURL + 'cylonRoute/stopLED')
-            .then((res) => res.text())
-            .then((res) => setApiResponse(res));
-    };
-
     const addDeviceHandler = () => {
         let deviceId = Math.floor(Math.random() * 9999) + 1000;
         deviceCtx.devices.push(deviceId)
@@ -39,19 +21,10 @@ function Dashboard() {
 
     return (
         <div className='dashboard'>
-            <h1>Dashboard</h1>
-            {/* <Button variant='primary' onClick={setLEDConfiguration}>
-                Configure LED
-            </Button>
-            <Button variant='success' onClick={startLED}>
-                Start the LED
-            </Button>
-            <Button variant='danger' onClick={stopLED}>
-                Stop the LED
-            </Button> */}
+            <h1 className='heading-title'>Robotics Framework</h1>
             <div>
-                <h2>Robot Config</h2>
-                <Button onClick={addDeviceHandler}>Add Device</Button>
+                <h2>Robot Configuration</h2>
+                <Button onClick={addDeviceHandler}>Add Robot</Button>
                 {deviceCtx.devices && deviceCtx.devices.map((deviceId) => (
                     <RobotConfig key={deviceId} id={deviceId} onRobotSelected={onRobotSelected} />
                 ))}

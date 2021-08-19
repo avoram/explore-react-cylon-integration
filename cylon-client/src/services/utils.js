@@ -8,6 +8,6 @@ export function post(url, data = {}, config = {}) {
             Accept: 'application/json',
             'Content-Type': 'application/json',
         },
-        body: data
+        body: JSON.stringify(data)
     });
 }
