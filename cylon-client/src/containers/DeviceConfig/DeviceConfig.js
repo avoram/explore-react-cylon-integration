@@ -1,12 +1,15 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { API_ENDPOINTS } from '../../constants/constants-app';
 import './DeviceConfig.css';
 
 function DeviceConfig(props) {
+    let { subdeviceId } = props;
     const [deviceList, setDeviceList] = useState([]);
     let [selectedDevice, setSelectedDevice] = useState([]);
+    let deviceRef = useRef();
+    let pinRef = useRef();
     React.useEffect(() => {
         async function getDevices() {
             setDeviceList([]);
@@ -22,7 +25,8 @@ function DeviceConfig(props) {
         setSelectedDevice(deviceList.find(ele => ele.id === event.target.value));
     }
     const testDevice = (id) => {
-        props.onDeviceSelected(selectedDevice);
+        props.onDeviceSelected(selectedDevice, deviceRef.current.value, pinRef.current.value, subdeviceId);
+        // props.onDeviceSelected(selectedDevice);
     }
     const onPinChange = (event) => {
         selectedDevice = { ...selectedDevice, pin: event };
@@ -34,7 +38,7 @@ function DeviceConfig(props) {
             <Container>
                 <Row>
                     <Col xs={6}>
-                        <Form.Control onChange={changedDevice} as="select" aria-label="Select Device">
+                        <Form.Control onChange={changedDevice} as="select" aria-label="Select Device" ref={deviceRef}>
                             {deviceList.map(item => (
                                 <option key={item.id} value={item.id} >
                                     {item.name}
@@ -43,7 +47,7 @@ function DeviceConfig(props) {
                         </Form.Control>
                     </Col>
                     <Col xs={3}>
-                        <Form.Control type="number" min="0" max="100" placeholder="Pin" required onChange={e => onPinChange(e.target.value)}></Form.Control>
+                        <Form.Control type="number" min="0" max="100" placeholder="Pin" required onChange={e => onPinChange(e.target.value)} ref={pinRef}></Form.Control>
                     </Col>
                     <Col xs={2}>
                         <Button onClick={() => testDevice()} variant="primary">Test Device</Button>{' '}

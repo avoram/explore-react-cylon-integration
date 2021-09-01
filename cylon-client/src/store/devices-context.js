@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 
 const DevicesContext = React.createContext({
     devices:[],
+    subdevices:[]
 });
 
 export const DevicesContextProvider = (props) => { 
     const contextValue = {
-        devices:[]
+        devices:[],
+        subdevices:[]
     };
     
     return(

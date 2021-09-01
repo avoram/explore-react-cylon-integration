@@ -8,14 +8,17 @@ import Devices from './pages/Devices';
 function App() {
   const [robotSelected, setRobotSelected] = useState('');
   const [deviceSelected, setDeviceSelected] = useState('');
+  const [deviceDetails, setDeviceDetails] = useState({});
   const history = useHistory();
   const onRobotSelected = (event) => {
     setRobotSelected(event);
   }
-  const onDeviceSelected = (event) => {
-    setDeviceSelected(event);
-    history.push('/testRobot');
+  const onDeviceSelected = (selectedDevice, deviceName, pinValue, subdeviceId) => {
+    setDeviceSelected(selectedDevice);
+    setDeviceDetails({deviceName,pinValue})
+    history.push('/testRobot/' + subdeviceId);
   }
+  console.log(deviceDetails);
   return (
     <div className='App'>
       <Switch>
@@ -26,7 +29,7 @@ function App() {
           <DeviceConfigPage onDeviceSelected={onDeviceSelected} />
         </Route>
         <Route path='/testRobot'>
-          <TestDevice robotSelected={robotSelected} deviceSelected={deviceSelected} />
+          <TestDevice robotSelected={robotSelected} deviceSelected={deviceSelected} deviceDetails={deviceDetails}/>
         </Route>
       </Switch>
     </div>

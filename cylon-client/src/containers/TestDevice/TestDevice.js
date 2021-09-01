@@ -6,6 +6,7 @@ import { get, post } from '../../services/utils';
 
 function TestDevice(props) {
     const [apiResponse, setApiResponse] = useState('');
+    const { deviceDetails } = props;
     React.useEffect(() => {
         async function setConfiguration() {
             const payload = { 'robot': props.robotSelected, 'device': props.deviceSelected };
