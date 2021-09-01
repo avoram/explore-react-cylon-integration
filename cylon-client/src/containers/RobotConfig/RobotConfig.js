@@ -1,36 +1,30 @@
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Form, Button, Row, Col, Container } from 'react-bootstrap';
+import DevicesContext from '../../store/devices-context';
 import './RobotConfig.css';
-import { API_ENDPOINTS } from '../../constants/constants-app';
-import { get } from '../../services/utils';
 
 function RobotConfig(props) {
-    let { id } = props;
-    let [platformList, setPlatformList] = useState([]);
+    const { id, deviceData, onRobotSelected } = props;
     let [selectedPlatform, setSelectedPlatform] = useState([]);
-    React.useEffect(() => {
-        async function getPlatforms() {
-            setPlatformList([]);
-            let response = await get(API_ENDPOINTS.ROOTURL + 'utils/getPlatforms');
-            response = await response.json();
-            setPlatformList(response);
-            setSelectedPlatform(response[0]);
-        }
-        getPlatforms();
-    }, []);
+    const deviceCtx = useContext(DevicesContext);
+    const platForms = deviceCtx.platforms;
+   
     const changedPlatform = (event) => {
-        setSelectedPlatform(platformList.find(ele => ele.id === event.target.value));
+        setSelectedPlatform(platForms.find(ele => ele.id === event.target.value));
     }
+    
     const addDevice = (id) => {
-        props.onRobotSelected(selectedPlatform, id);
+        onRobotSelected(selectedPlatform, id);
     }
+    
     const onPortChange = (event) => {
         selectedPlatform = { ...selectedPlatform, port: event };
         setSelectedPlatform(selectedPlatform);
         return true;
     }
 
+    console.log(deviceData);
     return (
         <div className='robot-config'>
             <Container>
@@ -39,8 +33,8 @@ function RobotConfig(props) {
                         <Form.Group >
                             <Form.Label>Platform</Form.Label>
                             <Form.Control onChange={changedPlatform} as="select" aria-label="Select Platform">
-                                {platformList.map(item => (
-                                    <option key={item.id} value={item.id} >
+                                {platForms.map(item => (
+                                    <option key={item.id} value={item.id}>
                                         {item.name}
                                     </option>
                                 ))}
@@ -48,11 +42,11 @@ function RobotConfig(props) {
                         </Form.Group>
                         <Form.Group >
                             <Form.Label>Adaptor</Form.Label>
-                            <Form.Control type="text" value={selectedPlatform.adaptor || ''} readOnly />
+                            <Form.Control type="text" value={deviceData.adaptor || ''} readOnly />
                         </Form.Group>
                         <Form.Group >
                             <Form.Label>Port</Form.Label>
-                            <Form.Control type="text" value={selectedPlatform.port || ''} onChange={e => onPortChange(e.target.value)} />
+                            <Form.Control type="text" value={deviceData.port || ''} onChange={e => onPortChange(e.target.value)} />
                         </Form.Group>
                     </Col>
                     <Col xs={3} className="buttons-section">
