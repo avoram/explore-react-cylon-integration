@@ -3,15 +3,17 @@ const Cylon = require('cylon');
 const router = express.Router();
 const LEDRobot = require('../robots/led-robot');
 
-router.post('/setRobotConfiguration', (req, res) => {
+router.post('/setRobotConfiguration', async (req, res) => {
   // Initialize the LED Robot
   console.log('req is :: ', req.body);
   const data = req.body;
-  let response = '';
-  if (data.device.id === 'led') {
-    response = LEDRobot.setLedRobotConfiguration(data);
-  }
-  res.send(response);
+  // if (data.device.id === 'led') {
+  await LEDRobot.setLedRobotConfiguration(data).then(resData => {
+    res.send(resData);
+  }).catch(err => {
+    res.send(err);
+  });
+  // }
 });
 router.get('/startLED', function (req, res, next) {
   // Start the LED

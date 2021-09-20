@@ -35,6 +35,17 @@
   color: #61dafb;
 }
 
+.heading-title {
+  background-color: #7b1526;
+  margin-bottom: 20px;
+  padding: 10px;
+  color: #fff;
+}
+.devicesText {
+  width: 8%;
+  height: 38px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

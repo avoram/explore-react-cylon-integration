@@ -1,36 +1,32 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import { Button, Col, Container, Form, Row } from 'react-bootstrap';
-import { API_ENDPOINTS } from '../../constants/constants-app';
+import DevicesContext from '../../store/devices-context';
 import './DeviceConfig.css';
 
 function DeviceConfig(props) {
-    let { subdeviceId } = props;
-    const [deviceList, setDeviceList] = useState([]);
+    let { robotId, deviceId } = props;
     let [selectedDevice, setSelectedDevice] = useState([]);
+    const context = useContext(DevicesContext);
+    const allDevices = context.allDevices;
     let deviceRef = useRef();
     let pinRef = useRef();
-    React.useEffect(() => {
-        async function getDevices() {
-            setDeviceList([]);
-            let response = await fetch(API_ENDPOINTS.ROOTURL + 'utils/getDevices');
-            response = await response.json();
-            setDeviceList(response);
-            setSelectedDevice(response[0]);
-        }
-        getDevices();
-    }, []);
-
+    // setSelectedDevice(device);
     const changedDevice = (event) => {
-        setSelectedDevice(deviceList.find(ele => ele.id === event.target.value));
+        const selected = allDevices.find(d => d.id === event.target.value);
+        props.onDeviceUpdated(robotId, deviceId, { deviceId: deviceId, ...selected });
+        setSelectedDevice(selected);
     }
     const testDevice = (id) => {
-        props.onDeviceSelected(selectedDevice, deviceRef.current.value, pinRef.current.value, subdeviceId);
-        // props.onDeviceSelected(selectedDevice);
+        // props.onDeviceSelected(selectedDevice, deviceRef.current.value, pinRef.current.value, subdeviceId);
+        props.onTestDevice(robotId, deviceId);
     }
     const onPinChange = (event) => {
-        selectedDevice = { ...selectedDevice, pin: event };
-        setSelectedDevice(selectedDevice);
+        const selected = context.selectedRobots[robotId].selectedDevices[deviceId];
+        const deviceToUpdate = { ...selected, pin: event };
+        props.onDeviceUpdated(robotId, deviceId, { deviceId: deviceId, ...deviceToUpdate });
+        setSelectedDevice(deviceToUpdate);
+
         return true;
     }
     return (
@@ -38,8 +34,8 @@ function DeviceConfig(props) {
             <Container>
                 <Row>
                     <Col xs={6}>
-                        <Form.Control onChange={changedDevice} as="select" aria-label="Select Device" ref={deviceRef}>
-                            {deviceList.map(item => (
+                        <Form.Control onChange={changedDevice} as="select" aria-label="Select Device" ref={deviceRef} value={context.selectedRobots[robotId].selectedDevices[deviceId].id}>
+                            {allDevices.map(item => (
                                 <option key={item.id} value={item.id} >
                                     {item.name}
                                 </option>
@@ -47,7 +43,7 @@ function DeviceConfig(props) {
                         </Form.Control>
                     </Col>
                     <Col xs={3}>
-                        <Form.Control type="number" min="0" max="100" placeholder="Pin" required onChange={e => onPinChange(e.target.value)} ref={pinRef}></Form.Control>
+                        <Form.Control type="number" min="0" max="100" placeholder="Pin" value={context.selectedRobots[robotId].selectedDevices[deviceId].pin || ''} required onChange={e => onPinChange(e.target.value)} ref={pinRef}></Form.Control>
                     </Col>
                     <Col xs={2}>
                         <Button onClick={() => testDevice()} variant="primary">Test Device</Button>{' '}

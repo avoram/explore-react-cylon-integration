@@ -1,19 +1,19 @@
 import React from 'react';
 
 const DevicesContext = React.createContext({
-    devices:[],
-    subdevices:[],
-    platforms: {}
+    selectedRobots: {},
+    allPlatforms: [],
+    allDevices: []
 });
 
-export const DevicesContextProvider = (props) => { 
+export const DevicesContextProvider = (props) => {
     const contextValue = {
-        devices:[],
-        subdevices:[],
-        platforms: {}
+        selectedRobots: {},
+        allPlatforms: [],
+        allDevices: []
     };
-    
-    return(
+
+    return (
         <DevicesContext.Provider value={contextValue}>
             {props.children}
         </DevicesContext.Provider>
